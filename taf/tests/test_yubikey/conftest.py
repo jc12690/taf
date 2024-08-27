@@ -1,4 +1,9 @@
-import taf.yubikey
+try:
+    from taf import YubikeyMissingLibrary
+    import taf.yubikey as yk
+except ImportError:
+    yk = YubikeyMissingLibrary()  # type: ignore
+
 from taf.tests import TEST_WITH_REAL_YK
 from taf.tests.conftest import KEYSTORE_PATH
 

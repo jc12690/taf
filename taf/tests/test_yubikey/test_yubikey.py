@@ -1,32 +1,27 @@
 import pytest
 
-from taf import YubikeyMissingLibrary
-from taf.tests import TEST_WITH_REAL_YK
+# Import YubikeyMissingLibrary if it's not commented out
+from taf import YubikeyMissingLibrary  # Uncomment this line if YubikeyMissingLibrary is needed
 
 try:
     import taf.yubikey as yk
 except ImportError:
-    yk = YubikeyMissingLibrary()  # type: ignore
-
+    yk = YubikeyMissingLibrary()  # Use the YubikeyMissingLibrary as a fallback if taf.yubikey cannot be imported
 
 @pytest.mark.skipif(not TEST_WITH_REAL_YK, reason="list_devices() is not mocked.")
 def test_is_inserted():
     assert yk.is_inserted() is True
 
-
 def test_serial_num():
     assert yk.get_serial_num() is not None
-
 
 def test_export_piv_x509():
     x509_pem = yk.export_piv_x509()
     assert isinstance(x509_pem, bytes)
 
-
 def test_export_piv_pub_key():
     pub_key_pem = yk.export_piv_pub_key()
     assert isinstance(pub_key_pem, bytes)
-
 
 def test_sign_piv_rsa_pkcs1v15(targets_yk):
     targets_yk.insert()
